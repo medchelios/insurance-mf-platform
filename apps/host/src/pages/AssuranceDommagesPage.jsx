@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Typography, Box, CircularProgress, Alert } from '@mui/material';
+import { Typography, Box, CircularProgress, Alert, Button, Card, CardContent, Grid } from '@mui/material';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 export function AssuranceDommagesPage() {
   const { user } = useAuth();
@@ -15,16 +16,18 @@ export function AssuranceDommagesPage() {
   }
 
   useEffect(() => {
-    import('mfe1/ReclamationForm')
-      .then((mfe1) => {
+    const loadComponent = async () => {
+      try {
+        const mfe1 = await import('mfe1/ReclamationForm');
         setComponent(() => mfe1.ReclamationFormComponent);
+      } catch (err) {
+        console.warn('Federation load failed:', err.message);
+        setError('Module Federation non disponible - utilisez le bouton ci-dessous');
+      } finally {
         setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Failed to load MFE1:', err);
-        setError(err.message);
-        setLoading(false);
-      });
+      }
+    };
+    loadComponent();
   }, []);
 
   if (loading) {
@@ -35,22 +38,34 @@ export function AssuranceDommagesPage() {
     );
   }
 
-  if (error) {
-    return (
-      <Box sx={{ p: 2 }}>
-        <Alert severity="error">
-          Erreur de chargement du module: {error}
-        </Alert>
-      </Box>
-    );
-  }
-
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
         Assurance Dommages
       </Typography>
-      {Component && <Component onSubmitClaim={(data) => console.log('Réclamation:', data)} />}
+      
+      {error || !Component ? (
+        <Card sx={{ mt: 2, bgcolor: '#fff3e0' }}>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              Formulaire de Réclamation Dommages
+            </Typography>
+            <Typography variant="body2" color="text.secondary" paragraph>
+              {error || 'Chargement du module Federation...'}
+            </Typography>
+            <Button 
+              variant="contained" 
+              color="warning"
+              startIcon={<OpenInNewIcon />}
+              onClick={() => window.open('http://localhost:3001', '_blank')}
+            >
+              Ouvrir le formulaire (MFE Angular)
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <Component onSubmitClaim={(data) => console.log('Réclamation:', data)} />
+      )}
     </Box>
   );
 }
