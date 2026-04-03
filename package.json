@@ -1,0 +1,9 @@
+{
+  "name": "react-mf-project",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm -r --parallel -m dev",
+    "build": "pnpm -r build",
+    "preview": "pnpm -r preview"
+  }
+}
