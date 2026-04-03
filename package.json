@@ -3,6 +3,9 @@
   "private": true,
   "scripts": {
     "dev": "pnpm -r --parallel -m dev",
+    "dev:host": "pnpm --filter host dev",
+    "dev:mfe1": "pnpm --filter mfe1 dev",
+    "dev:mfe2": "pnpm --filter mfe2 dev",
     "build": "pnpm -r build",
     "preview": "pnpm -r preview"
   }
