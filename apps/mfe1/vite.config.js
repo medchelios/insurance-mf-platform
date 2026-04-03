@@ -24,6 +24,14 @@ export default defineConfig({
     strictPort: true
   },
   build: {
-    target: 'esnext'
+    target: 'esnext',
+    rollupOptions: {
+      output: {
+        format: 'esm'
+      }
+    }
+  },
+  optimizeDeps: {
+    include: ['zone.js', '@angular/core', '@angular/common', '@angular/forms', 'rxjs']
   }
 })

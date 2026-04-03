@@ -1,71 +1,139 @@
 import { useState, useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Typography, Box, CircularProgress, Alert, Button, Card, CardContent, Grid } from '@mui/material';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { Typography, Box, Card, CardContent, TextField, Button, Grid, Checkbox, FormControlLabel, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+
+const sinistreTypes = [
+  { value: 'degats-eaux', label: 'Dégôts des eaux' },
+  { value: 'incendie', label: 'Incendie' },
+  { value: 'vol', label: 'Vol' },
+  { value: 'accident', label: 'Accident de circulation' },
+  { value: 'autre', label: 'Autre' },
+];
 
 export function AssuranceDommagesPage() {
   const { user } = useAuth();
   const location = useLocation();
-  const [Component, setComponent] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [form, setForm] = useState({
+    typeSinistre: '',
+    dateSinistre: '',
+    description: '',
+    montantEstime: '',
+    dejaDeclare: false,
+    numeroContrat: ''
+  });
+  const [submitted, setSubmitted] = useState(false);
 
   if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  useEffect(() => {
-    const loadComponent = async () => {
-      try {
-        const mfe1 = await import('mfe1/ReclamationForm');
-        setComponent(() => mfe1.ReclamationFormComponent);
-      } catch (err) {
-        console.warn('Federation load failed:', err.message);
-        setError('Module Federation non disponible - utilisez le bouton ci-dessous');
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadComponent();
-  }, []);
+  const handleChange = (field) => (e) => {
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    setForm(prev => ({ ...prev, [field]: value }));
+  };
 
-  if (loading) {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Réclamation soumise:', form);
+    setSubmitted(true);
+  };
+
+  const isValid = form.typeSinistre && form.dateSinistre && form.description && form.numeroContrat;
+
+  if (submitted) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
-        <CircularProgress />
+      <Box>
+        <Typography variant="h4" gutterBottom>Assurance Dommages</Typography>
+        <Card sx={{ mt: 2, bgcolor: '#e8f5e9' }}>
+          <CardContent>
+            <Typography variant="h6" color="primary">Réclamation soumise avec succès!</Typography>
+            <Button variant="outlined" sx={{ mt: 2 }} onClick={() => setSubmitted(false)}>
+              Soumettre une autre réclamation
+            </Button>
+          </CardContent>
+        </Card>
       </Box>
     );
   }
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
-        Assurance Dommages
+      <Typography variant="h4" gutterBottom>Assurance Dommages</Typography>
+      <Typography variant="body1" paragraph color="text.secondary">
+        Formulaire de réclamation pour dommages assurance
       </Typography>
       
-      {error || !Component ? (
-        <Card sx={{ mt: 2, bgcolor: '#fff3e0' }}>
-          <CardContent>
-            <Typography variant="h6" gutterBottom>
-              Formulaire de Réclamation Dommages
-            </Typography>
-            <Typography variant="body2" color="text.secondary" paragraph>
-              {error || 'Chargement du module Federation...'}
-            </Typography>
-            <Button 
-              variant="contained" 
-              color="warning"
-              startIcon={<OpenInNewIcon />}
-              onClick={() => window.open('http://localhost:3001', '_blank')}
-            >
-              Ouvrir le formulaire (MFE Angular)
-            </Button>
-          </CardContent>
-        </Card>
-      ) : (
-        <Component onSubmitClaim={(data) => console.log('Réclamation:', data)} />
-      )}
+      <Card sx={{ mt: 2 }}>
+        <CardContent>
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={6}>
+                <FormControl fullWidth>
+                  <InputLabel>Type de sinistre</InputLabel>
+                  <Select
+                    value={form.typeSinistre}
+                    onChange={handleChange('typeSinistre')}
+                    label="Type de sinistre"
+                  >
+                    {sinistreTypes.map(t => <MenuItem key={t.value} value={t.value}>{t.label}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Date du sinistre"
+                  type="date"
+                  value={form.dateSinistre}
+                  onChange={handleChange('dateSinistre')}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Description détaillée"
+                  multiline
+                  rows={4}
+                  value={form.description}
+                  onChange={handleChange('description')}
+                  placeholder="Décrivez les circonstances du sinistre..."
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Montant estimé (€)"
+                  type="number"
+                  value={form.montantEstime}
+                  onChange={handleChange('montantEstime')}
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Numéro de contrat"
+                  value={form.numeroContrat}
+                  onChange={handleChange('numeroContrat')}
+                  placeholder="Ex: POL-2024-XXXXX"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={<Checkbox checked={form.dejaDeclare} onChange={handleChange('dejaDeclare')} />}
+                  label="Déclaration déjà effectuée auprès de l'assureur"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button type="submit" variant="contained" disabled={!isValid}>
+                  Soumettre la réclamation
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </CardContent>
+      </Card>
     </Box>
   );
 }
