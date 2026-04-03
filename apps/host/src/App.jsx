@@ -1,5 +1,5 @@
 import { useState, createContext, useContext } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation, Link } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import AppBar from '@mui/material/AppBar';
@@ -139,13 +139,13 @@ function Layout({ children }) {
           </Typography>
           {user && (
             <>
-              <Button color="inherit" href="/dashboard">
+              <Button color="inherit" component={Link} to="/dashboard">
                 Dashboard
               </Button>
-              <Button color="inherit" href="/mfe1">
+              <Button color="inherit" component={Link} to="/mfe1">
                 MFE1 (Angular)
               </Button>
-              <Button color="inherit" href="/mfe2">
+              <Button color="inherit" component={Link} to="/mfe2">
                 MFE2 (Vue)
               </Button>
               <Typography variant="body2" sx={{ mx: 2 }}>
@@ -179,6 +179,13 @@ function Dashboard() {
 }
 
 function MFE1Loader() {
+  const { user } = useAuth();
+  const location = useLocation();
+
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
   return (
     <Box sx={{ p: 2, border: '1px solid #ddd', borderRadius: 2 }}>
       <Typography variant="h5" gutterBottom>
@@ -192,6 +199,13 @@ function MFE1Loader() {
 }
 
 function MFE2Loader() {
+  const { user } = useAuth();
+  const location = useLocation();
+
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
   return (
     <Box sx={{ p: 2, border: '1px solid #ddd', borderRadius: 2 }}>
       <Typography variant="h5" gutterBottom>
