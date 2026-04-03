@@ -9,7 +9,7 @@ export default defineConfig({
       name: 'mfe2',
       filename: 'remoteEntry.js',
       exposes: {
-        './Card': './src/Card.vue'
+        './AccountLinkForm': './src/AccountLinkForm.vue'
       },
       remotes: {},
       shared: ['vue']

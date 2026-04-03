@@ -9,7 +9,7 @@ export default defineConfig({
       name: 'mfe1',
       filename: 'remoteEntry.js',
       exposes: {
-        './Button': './src/app/button/button.component.ts'
+        './ReclamationForm': './src/app/reclamation/reclamation-form.component.ts'
       },
       remotes: {},
       shared: ['@angular/core', '@angular/common', 'rxjs']

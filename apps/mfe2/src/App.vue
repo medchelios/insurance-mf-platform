@@ -1,11 +1,15 @@
 <template>
   <div>
     <h1>MFE 2 - Vue.js</h1>
-    <p>Ce module expose une carte via Federation</p>
-    <Card title="Carte depuis Vue">Contenu de la carte MFE2</Card>
+    <p>Module de liaison compte épargne et placement</p>
+    <AccountLinkForm @submit="onSubmit"></AccountLinkForm>
   </div>
 </template>
 
 <script setup>
-import Card from './Card.vue'
+import AccountLinkForm from './AccountLinkForm.vue'
+
+const onSubmit = (data) => {
+  console.log('Compte lié:', data)
+}
 </script>
