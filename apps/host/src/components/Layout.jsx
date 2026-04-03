@@ -17,11 +17,11 @@ export function Layout({ children }) {
               <Button color="inherit" component={Link} to="/dashboard">
                 Dashboard
               </Button>
-              <Button color="inherit" component={Link} to="/mfe1">
-                MFE1 (Angular)
+              <Button color="inherit" component={Link} to="/assurance-dommages">
+                Assurance Dommages
               </Button>
-              <Button color="inherit" component={Link} to="/mfe2">
-                MFE2 (Vue)
+              <Button color="inherit" component={Link} to="/assurance-individuelle">
+                Assurance Individuelle
               </Button>
               <Typography variant="body2" sx={{ mx: 2 }}>
                 {user.name}

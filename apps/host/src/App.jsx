@@ -6,8 +6,8 @@ import { Layout } from './components/Layout';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { LoginPage } from './pages/LoginPage';
 import { Dashboard } from './pages/Dashboard';
-import { MFE1Page } from './pages/MFE1Page';
-import { MFE2Page } from './pages/MFE2Page';
+import { AssuranceDommagesPage } from './pages/AssuranceDommagesPage';
+import { AssuranceIndividuellePage } from './pages/AssuranceIndividuellePage';
 import theme from './theme';
 
 function App() {
@@ -28,18 +28,18 @@ function App() {
                 }
               />
               <Route
-                path="/mfe1"
+                path="/assurance-dommages"
                 element={
                   <ProtectedRoute>
-                    <MFE1Page />
+                    <AssuranceDommagesPage />
                   </ProtectedRoute>
                 }
               />
               <Route
-                path="/mfe2"
+                path="/assurance-individuelle"
                 element={
                   <ProtectedRoute>
-                    <MFE2Page />
+                    <AssuranceIndividuellePage />
                   </ProtectedRoute>
                 }
               />

@@ -1,0 +1,1 @@
+export { ReclamationFormComponent } from './reclamation-form.component';

@@ -4,12 +4,14 @@ import federation from '@originjs/vite-plugin-federation'
 
 export default defineConfig({
   plugins: [
-    angular(),
+    angular({
+      main: 'src/main.ts'
+    }),
     federation({
       name: 'mfe1',
       filename: 'remoteEntry.js',
       exposes: {
-        './ReclamationForm': './src/app/reclamation/reclamation-form.component.ts'
+        './ReclamationForm': './src/app/app.component.ts'
       },
       remotes: {},
       shared: ['@angular/core', '@angular/common', 'rxjs']
@@ -24,6 +26,9 @@ export default defineConfig({
     strictPort: true
   },
   build: {
-    target: 'esnext'
+    target: 'esnext',
+    lib: {
+      entry: 'src/app/app.component.ts'
+    }
   }
 })
