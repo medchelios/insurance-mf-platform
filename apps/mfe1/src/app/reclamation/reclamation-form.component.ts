@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
         <label for="typeSinistre">Type de sinistre</label>
         <select id="typeSinistre" [(ngModel)]="form.typeSinistre" name="typeSinistre">
           <option value="">Sélectionner...</option>
-          <option value="degats-eaux">Dégâts des eaux</option>
+          <option value="degats-eaux">Dégôts des eaux</option>
           <option value="incendie">Incendie</option>
           <option value="vol">Vol</option>
           <option value="accident">Accident de circulation</option>
