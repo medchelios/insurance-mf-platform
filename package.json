@@ -1,21 +1,14 @@
 {
-  "name": "react-mf-project",
+  "name": "insurance-mf-platform",
   "private": true,
   "scripts": {
-    "dev": "pnpm -r --parallel -m dev",
-    "dev:host": "pnpm --filter host dev",
-    "dev:mfe1": "pnpm --filter mfe1 dev",
-    "dev:mfe2": "pnpm --filter mfe2 dev",
-    "build": "pnpm -r build",
-    "build:mfe1": "pnpm --filter mfe1 build",
-    "build:mfe2": "pnpm --filter mfe2 build",
-    "build:host": "pnpm --filter host build",
-    "preview": "pnpm -r preview",
-    "preview:mfe1": "pnpm --filter mfe1 preview",
-    "preview:mfe2": "pnpm --filter mfe2 preview",
-    "preview:host": "pnpm --filter host preview",
-    "start": "concurrently \"pnpm preview:mfe1\" \"pnpm preview:mfe2\" \"pnpm preview:host\"",
-    "start:all": "pnpm build && pnpm start"
+    "dev": "pnpm -r --parallel -m -C apps-mf/apps dev",
+    "dev:host": "pnpm --filter host -C apps-mf/apps dev",
+    "dev:mfe1": "pnpm --filter mfe1 -C apps-mf/apps dev",
+    "dev:mfe2": "pnpm --filter mfe2 -C apps-mf/apps dev",
+    "dev:api": "pnpm -C bff-mf/api dev",
+    "build": "pnpm -r -C apps-mf/apps build",
+    "start": "pnpm -r -C apps-mf/apps preview"
   },
   "devDependencies": {
     "concurrently": "^9.1.0"
