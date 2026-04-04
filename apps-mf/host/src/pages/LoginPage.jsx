@@ -6,10 +6,10 @@ import { Box, Card, TextField, Button, Typography, Alert } from '@mui/material';
 export function LoginPage() {
   const [email, setEmail] = useState('test@example.com');
   const [password, setPassword] = useState('password123');
-  const [error, setError] = useState('');
+  const [localError, setLocalError] = useState('');
   const [loading, setLoading] = useState(false);
   
-  const { login } = useAuth();
+  const { login, error: authError } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -17,18 +17,20 @@ export function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setLocalError('');
     setLoading(true);
     
     try {
       await login(email, password);
       navigate(from, { replace: true });
     } catch (err) {
-      setError(err.message);
+      setLocalError(err.message || 'Erreur de connexion');
     } finally {
       setLoading(false);
     }
   };
+
+  const error = localError || authError;
 
   return (
     <Box
@@ -45,7 +47,7 @@ export function LoginPage() {
           Connexion
         </Typography>
         <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: 3 }}>
-          Utiliser: test@example.com / password123
+          Connectez-vous à votre espace
         </Typography>
         
         <form onSubmit={handleSubmit}>

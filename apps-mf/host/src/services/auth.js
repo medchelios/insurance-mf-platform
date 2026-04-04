@@ -1,29 +1,26 @@
+import { authApi } from './api';
+
 const TOKEN_KEY = 'auth_token';
 const USER_KEY = 'auth_user';
 
 export const authService = {
-  login(email, password) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (email && password) {
-          const user = {
-            email,
-            name: email.split('@')[0],
-            token: 'mock-token-' + Date.now()
-          };
-          localStorage.setItem(TOKEN_KEY, user.token);
-          localStorage.setItem(USER_KEY, JSON.stringify(user));
-          resolve(user);
-        } else {
-          reject(new Error('Invalid credentials'));
-        }
-      }, 800);
-    });
+  async login(email, password) {
+    const data = await authApi.login(email, password);
+    return data.user;
   },
 
-  logout() {
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
+  async register(name, email, password, passwordConfirmation) {
+    const data = await authApi.register(name, email, password, passwordConfirmation);
+    return data.user;
+  },
+
+  async logout() {
+    try {
+      await authApi.logout();
+    } finally {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+    }
   },
 
   getUser() {
