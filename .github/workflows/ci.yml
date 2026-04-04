@@ -55,13 +55,16 @@ jobs:
       - name: Install Composer dependencies
         run: cd bff-mf && composer install --no-interaction
       
-      - name: Setup MySQL
+      - name: Setup SQLite
         run: |
-          sudo systemctl start mysql
-          sudo mysql -e "CREATE DATABASE IF NOT EXISTS insurance_mf;"
-          sudo mysql -e "CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED BY 'password';"
-          sudo mysql -e "GRANT ALL PRIVILEGES ON insurance_mf.* TO 'root'@'localhost';"
-          sudo mysql -e "FLUSH PRIVILEGES;"
+          touch bff-mf/database/database.sqlite
+      
+      - name: Update .env for SQLite
+        run: |
+          echo "DB_CONNECTION=sqlite" > bff-mf/.env.test
+          echo "DB_DATABASE=database/database.sqlite" >> bff-mf/.env.test
+          cp bff-mf/.env bff-mf/.env.backup
+          cp bff-mf/.env.test bff-mf/.env
       
       - name: Run migrations
         run: cd bff-mf && php artisan migrate --force
