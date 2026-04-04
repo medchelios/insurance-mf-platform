@@ -1,61 +1,69 @@
-import axios from 'axios';
-
 const API_URL = 'http://localhost:8000/api';
 
-const api = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-api.interceptors.request.use((config) => {
+const getAuthHeaders = () => {
+  const headers = { 'Content-Type': 'application/json' };
   const token = localStorage.getItem('auth_token');
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    headers['Authorization'] = `Bearer ${token}`;
   }
-  return config;
-});
+  return headers;
+};
 
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
+const handleResponse = async (response) => {
+  const data = await response.json();
+  console.log('API Response:', response.status, data);
+  
+  if (!response.ok) {
+    if (response.status === 401) {
       localStorage.removeItem('auth_token');
       localStorage.removeItem('auth_user');
       window.location.href = '/login';
     }
-    return Promise.reject(error);
+    throw new Error(data.message || 'API Error');
   }
-);
+  
+  return data;
+};
 
 export const authApi = {
   login: async (email, password) => {
-    const response = await api.post('/login', { email, password });
-    if (response.data.token) {
-      localStorage.setItem('auth_token', response.data.token);
-      localStorage.setItem('auth_user', JSON.stringify(response.data.user));
+    console.log('API Request: POST /login', { email });
+    const response = await fetch(`${API_URL}/login`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await handleResponse(response);
+    if (data.token) {
+      localStorage.setItem('auth_token', data.token);
+      localStorage.setItem('auth_user', JSON.stringify(data.user));
     }
-    return response.data;
+    return data;
   },
 
   register: async (name, email, password, passwordConfirmation) => {
-    const response = await api.post('/register', {
-      name,
-      email,
-      password,
-      password_confirmation: passwordConfirmation,
+    console.log('API Request: POST /register', { name, email });
+    const response = await fetch(`${API_URL}/register`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ name, email, password, password_confirmation: passwordConfirmation }),
     });
-    if (response.data.token) {
-      localStorage.setItem('auth_token', response.data.token);
-      localStorage.setItem('auth_user', JSON.stringify(response.data.user));
+    const data = await handleResponse(response);
+    if (data.token) {
+      localStorage.setItem('auth_token', data.token);
+      localStorage.setItem('auth_user', JSON.stringify(data.user));
     }
-    return response.data;
+    return data;
   },
 
   logout: async () => {
+    console.log('API Request: POST /logout');
     try {
-      await api.post('/logout');
+      const response = await fetch(`${API_URL}/logout`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+      });
+      await handleResponse(response);
     } finally {
       localStorage.removeItem('auth_token');
       localStorage.removeItem('auth_user');
@@ -63,9 +71,13 @@ export const authApi = {
   },
 
   me: async () => {
-    const response = await api.get('/me');
-    return response.data;
+    console.log('API Request: GET /me');
+    const response = await fetch(`${API_URL}/me`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
   },
 };
 
-export default api;
+export default null;
