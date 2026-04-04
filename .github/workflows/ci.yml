@@ -61,17 +61,19 @@ jobs:
       
       - name: Update .env for SQLite
         run: |
-          echo "DB_CONNECTION=sqlite" > bff-mf/.env.test
+          echo "APP_ENV=local" > bff-mf/.env.test
+          echo "APP_DEBUG=true" >> bff-mf/.env.test
+          echo "DB_CONNECTION=sqlite" >> bff-mf/.env.test
           echo "DB_DATABASE=database/database.sqlite" >> bff-mf/.env.test
           cp bff-mf/.env bff-mf/.env.backup
           cp bff-mf/.env.test bff-mf/.env
-      
+
       - name: Run migrations
         run: cd bff-mf && php artisan migrate --force
-      
+
       - name: Seed database
-        run: cd bff-mf && php artisan db:seed --class=DatabaseSeeder
-      
+        run: cd bff-mf && php artisan db:seed --class=DatabaseSeeder --force
+
       - name: Start API server
         run: cd bff-mf && php artisan serve --port=8000 &
         shell: bash
