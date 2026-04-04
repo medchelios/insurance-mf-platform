@@ -56,12 +56,12 @@ jobs:
         run: cd bff-mf && composer install --no-interaction
       
       - name: Setup MySQL
-        uses: shivammathur/setup-mysql@v2
-        with:
-          mysql-version: '8.0'
-          database: insurance_mf
-          user: root
-          password: password
+        run: |
+          sudo systemctl start mysql
+          sudo mysql -e "CREATE DATABASE IF NOT EXISTS insurance_mf;"
+          sudo mysql -e "CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED BY 'password';"
+          sudo mysql -e "GRANT ALL PRIVILEGES ON insurance_mf.* TO 'root'@'localhost';"
+          sudo mysql -e "FLUSH PRIVILEGES;"
       
       - name: Run migrations
         run: cd bff-mf && php artisan migrate --force
