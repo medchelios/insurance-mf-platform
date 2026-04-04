@@ -10,7 +10,7 @@ export function Layout({ children }) {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Module Federation App
+            Module Federation Concept
           </Typography>
           {user && (
             <>

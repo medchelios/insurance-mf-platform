@@ -29,5 +29,6 @@ echo ""
 echo "Press Ctrl+C to stop all services"
 
 # Wait for Ctrl+C
+# shellcheck disable=SC2064
 trap "kill $LARAVEL_PID $REACT_PID 2>/dev/null; exit" INT TERM
 wait
