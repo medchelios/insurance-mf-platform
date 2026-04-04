@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useAccounts, useCreateAccount, useDeleteAccount } from '../services/accounts';
-import { Box, Typography, Card, Tabs, Tab, TextField, Button, Grid, Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, CircularProgress, MenuItem, Select, FormControl, InputLabel, Paper } from '@mui/material';
+import { Box, Typography, Card, Tabs, Tab, TextField, Button, Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, CircularProgress, MenuItem, Select, FormControl, InputLabel, Paper } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { Link as LinkIcon, AccountBalance, Delete } from '@mui/icons-material';
 
 const accountTypes = [

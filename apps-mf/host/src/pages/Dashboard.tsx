@@ -1,7 +1,8 @@
 import { useClaims } from '../services/claims';
 import { useAccounts } from '../services/accounts';
 import { useAuth } from '../context/AuthContext';
-import { Box, Typography, Grid, Chip, Button, Paper } from '@mui/material';
+import { Box, Typography, Chip, Button, Paper } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { CarCrash, AccountBalance } from '@mui/icons-material';
 
 const claimStatusColors: Record<string, 'success' | 'warning' | 'error'> = {
