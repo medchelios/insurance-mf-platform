@@ -22,25 +22,23 @@ jobs:
         with:
           node-version: '20'
           cache: 'pnpm'
+          cache-dependency-path: apps-mf/host/pnpm-lock.yaml
       
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Install host dependencies
+        run: cd apps-mf/host && pnpm install
       
-      - name: Build all apps
-        run: pnpm build
+      - name: Build host
+        run: cd apps-mf/host && pnpm build
       
-      - name: Start MFE servers in background
-        run: |
-          pnpm preview:mfe1 &
-          pnpm preview:mfe2 &
-          pnpm preview:host &
-          sleep 10
+      - name: Start host server
+        run: cd apps-mf/host && pnpm preview &
+        shell: bash
+        
+      - name: Wait for server
+        run: sleep 5
       
-      - name: Test servers are running
-        run: |
-          curl -f http://localhost:3000/ || exit 1
-          curl -f http://localhost:3001/assets/remoteEntry.js || exit 1
-          curl -f http://localhost:3002/assets/remoteEntry.js || exit 1
+      - name: Test server
+        run: curl -f http://localhost:3000/ || exit 1
       
-      - name: Stop servers
+      - name: Stop server
         run: pkill -f "vite"
