@@ -1,90 +1,32 @@
-# Module Federation Insurance Platform
+# Insurance MF Platform
 
-Monorepo multi-framework avec Module Federation pour une plateforme d'assurance.
-
-## Architecture
+## Structure
 
 ```
 insurance-mf-platform/
-├── apps/
-│   ├── host/           # Application principale (React + MUI)
-│   │   └── Port 3000   # Login, Dashboard, routing
-│   ├── mfe1/           # Micro-frontend Angular
-│   │   └── Port 3001   # Formulaire réclamation dommages
-│   └── mfe2/           # Micro-frontend Vue.js
-│       └── Port 3002   # Formulaire liaison compte épargne
-├── pnpm-workspace.yaml
-└── package.json
+├── apps-mf/           # Micro-frontends
+│   ├── host/         # React + MUI (port 3000)
+│   ├── mfe1/         # Angular Dommages (port 3001)
+│   └── mfe2/         # Vue Individuelle (port 3002)
+└── bff-mf/           # Laravel API
 ```
 
-## Stack Technique
-
-- **Build**: Vite 6
-- **Federation**: @originjs/vite-plugin-federation
-- **Package Manager**: pnpm (workspaces)
-- **Frameworks**:
-  - Host: React 18 + MUI
-  - MFE1: Angular 18 (@analogjs/vite-plugin-angular)
-  - MFE2: Vue 3
-
-## Installation
+## Commands
 
 ```bash
-pnpm install
+# Frontend
+cd apps-mf/host && pnpm dev      # Host: http://localhost:3000
+cd apps-mf/mfe1 && pnpm dev      # MFE1: http://localhost:3001
+cd apps-mf/mfe2 && pnpm dev      # MFE2: http://localhost:3002
+
+# Backend
+cd bff-mf && php artisan serve   # API: http://localhost:8000
+
+# Or run all frontend in parallel
+cd apps-mf && pnpm -r --parallel dev
 ```
 
-## Développement
+## Login
 
-```bash
-# Lancer tous les apps en mode dev (sans Federation)
-pnpm dev
-
-# Lancer un app spécifique
-pnpm dev:host   # localhost:3000
-pnpm dev:mfe1   # localhost:3001
-pnpm dev:mfe2   # localhost:3002
-```
-
-## Build + Preview (avec Federation)
-
-```bash
-# Build tous les apps
-pnpm build
-
-# Lancer les 3 en mode preview (requiert build préalable)
-pnpm start
-```
-
-## Authentification
-
-- Login: `test@example.com`
-- Password: `password123`
-
-## Routes
-
-- `/login` - Page de connexion
-- `/dashboard` - Dashboard principal
-- `/assurance-dommages` - Formulaire réclamation (Angular MFE)
-- `/assurance-individuelle` - Liaison compte épargne (Vue MFE)
-
-## MF Skill
-
-Ce projet inclut un skill Module Federation dans `.agents/skills/mf/`:
-
-```bash
-# Utiliser le skill
-opencode mf <sub-command>
-
-# Exemples
-opencode mf docs
-opencode mf config-check
-opencode mf runtime-error
-```
-
-## GitHub Actions
-
-CI/CD configuré dans `.github/workflows/ci.yml` - Build et test sur push/PR.
-
-## License
-
-MIT
+- Email: test@example.com
+- Password: password123
